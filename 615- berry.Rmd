@@ -1,0 +1,137 @@
+---
+title: "Strawberry Data Analysis"
+author: "Donghao Xue"
+date: "10/21/2020"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(ggplot2)
+library(rstanarm)
+library(knitr)
+library(kableExtra)
+library(stats)
+library(magrittr)
+knitr::opts_chunk$set(echo = TRUE, message = FALSE)
+```
+
+## Introduction
+
+The data contains information about one type of red berry which is strawberry. I plan to discuss the distribution of the column of value and its relationship with other variables.
+
+
+
+## Analysis
+
+```{r, warning=FALSE}
+# organize data
+sberry = read.csv("sberry.csv")
+
+aa = str_extract_all(sberry$Value, "[0-9]|\\.")
+bb = c()
+
+for(i in 1:2271){
+  bb[i]= as.numeric(paste(unlist(aa[i]), collapse = ""))
+  
+}
+sberry %<>% mutate(Value = bb)
+
+#plot of values for each year
+
+ggplot(sberry, aes(x = Year, y = Value)) + geom_point()
+
+```
+
+We can see that the highest value occurs in 2018. Most values are clustered around the base line.
+
+
+
+
+
+```{r}
+mean (sberry$Value[which(sberry$Value>0)])
+median(sberry$Value[which(sberry$Value>0)])
+
+```
+
+The average value is about 81000. The median is 1.5, so in normal situation, the value should be around 1.5.
+
+
+
+```{r}
+#The values of strawberry in different states.
+
+#California
+c = which(sberry$State == "CALIFORNIA")
+plot(1:length(c), sberry$Value[c])
+
+#Florida
+f = which(sberry$State == "FLORIDA")
+plot(1:length(f), sberry$Value[f])
+
+
+#Oregon
+o = which(sberry$State == "OREGON")
+plot(1:length(o), sberry$Value[o])
+
+
+#Washington
+w = which(sberry$State == "WASHINGTON")
+plot(1:length(w), sberry$Value[w])
+```
+
+From the plots we can see that the state that produces most strawberries is California.
+
+
+
+
+
+
+```{r}
+t1 = sberry$Value[c] 
+mean(t1[which(t1>0)])
+
+t2 = sberry$Value[f]
+mean(t2[which(t2>0)])
+
+t3 = sberry$Value[o]
+mean(t3[which(t3>0)])
+
+t4 = sberry$Value[w]
+mean(t4[which(t4>0)])
+```
+
+Strawberries in California have the highest average value.
+
+
+## Conclusion
+
+From the dataset we can roughly idendify the distribution of the values of strawberries. Since there are lots of missing values, it needs more data to get an accurate result. 
+
+
+
+
+## Reference
+
+USDA database selector: https://quickstats.nass.usda.gov">https://quickstats.nass.usda.gov
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
